@@ -1,0 +1,31 @@
+plugins {
+    id 'application'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // 객체 내부를 바이트 단위로 보여주는 OpenJDK 공식 도구
+    implementation 'org.openjdk.jol:jol-core:0.17'
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}
+
+application {
+    // 실행할 클래스: .\gradlew.bat run -Pmain=q1.클래스이름
+    mainClass.set(providers.gradleProperty('main').orElse('q1.Exp1_ObjectLayout'))
+    applicationDefaultJvmArgs = [
+            '-Djdk.attach.allowAttachSelf=true',
+            '-Djol.skipHotspotSAAttach=true',
+            '-Dstdout.encoding=UTF-8',   // 윈도우 콘솔 한글 깨짐 방지
+    ]
+}
+
+tasks.named('run') {
+    // 추가 JVM 옵션: .\gradlew.bat run -Pjvm="-XX:-UseCompressedOops"
+    jvmArgs((project.findProperty('jvm') ?: '').tokenize())
+}
