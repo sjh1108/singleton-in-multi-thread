@@ -9,4 +9,3 @@
  */
 
 rootProject.name = 'singleton-in-multi-thread'
-include('plugin')
